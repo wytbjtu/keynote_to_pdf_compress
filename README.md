@@ -1,2 +1,92 @@
 # keynote_to_pdf_compress
-keynote_to_pdf_compress
+
+Export an Apple Keynote (`.key`) presentation to PDF and produce a
+compressed copy in one step.
+
+The export is driven by Keynote itself through AppleScript (since the
+`.key` format isn't readable by Python libraries), and the compression
+pass is done with Ghostscript.
+
+## Requirements
+
+- macOS with [Keynote](https://apps.apple.com/app/keynote/id409183694) installed
+- Python 3.9+
+- [Ghostscript](https://www.ghostscript.com/) on `PATH` (`gs`)
+
+Install Ghostscript with Homebrew:
+
+```sh
+brew install ghostscript
+```
+
+## Usage
+
+```sh
+python3 keynote_to_pdf_compress.py path/to/deck.key
+```
+
+This produces two files next to the source `.key`:
+
+- `deck.pdf` — uncompressed Keynote export
+- `deck_compressed_ebook.pdf` — Ghostscript-compressed copy
+
+### Options
+
+| Flag | Description | Default |
+| --- | --- | --- |
+| `--pdf PATH` | Path for the uncompressed PDF | `<deck>.pdf` |
+| `--compressed PATH` | Path for the compressed PDF | `<deck>_compressed_<preset>.pdf` |
+| `--quality {Good,Better,Best}` | Image quality used by Keynote during export | `Better` |
+| `--preset {screen,ebook,printer,prepress,default}` | Ghostscript `-dPDFSETTINGS` preset | `ebook` |
+| `--image-dpi N` | Target DPI for color/gray images when compressing | `180` |
+| `--compress-only` | Skip the Keynote step and compress the existing `--pdf` file | off |
+| `--remove-source-pdf` | Delete the uncompressed PDF after compression | off |
+
+### Examples
+
+Export with the highest Keynote quality, then compress aggressively for
+screen viewing:
+
+```sh
+python3 keynote_to_pdf_compress.py deck.key \
+    --quality Best --preset screen --image-dpi 120
+```
+
+Re-compress a PDF you already have:
+
+```sh
+python3 keynote_to_pdf_compress.py deck.key \
+    --compress-only --pdf deck.pdf --compressed deck_small.pdf
+```
+
+Export, compress, and discard the large intermediate PDF:
+
+```sh
+python3 keynote_to_pdf_compress.py deck.key --remove-source-pdf
+```
+
+## Preset cheatsheet
+
+Ghostscript's presets trade size for fidelity:
+
+- `screen` — smallest, ~72 dpi images, good for email/web
+- `ebook` — small, ~150 dpi images, good default for sharing
+- `printer` — ~300 dpi images, good for office printing
+- `prepress` — ~300 dpi, preserves color, for commercial printing
+- `default` — Ghostscript's general-purpose settings
+
+Explicit `--image-dpi` overrides the color/gray image resolution from the
+preset.
+
+## Notes
+
+- The script launches Keynote, opens the file, exports it, then closes
+  the opened document. Keynote itself is left running.
+- Exports can take a while; the AppleScript timeout is 30 minutes per
+  document.
+- Exit status is `0` on success, `1` on any handled error (file missing,
+  Ghostscript missing, Keynote/Ghostscript failure, etc.).
+
+## License
+
+MIT — see [LICENSE](LICENSE).
