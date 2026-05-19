@@ -1,5 +1,18 @@
 # keynote_to_pdf_compress
 
+[![Stars](https://img.shields.io/github/stars/wytbjtu/keynote_to_pdf_compress?style=flat&logo=github)](https://github.com/wytbjtu/keynote_to_pdf_compress/stargazers)
+[![Forks](https://img.shields.io/github/forks/wytbjtu/keynote_to_pdf_compress?style=flat&logo=github)](https://github.com/wytbjtu/keynote_to_pdf_compress/network/members)
+[![Watchers](https://img.shields.io/github/watchers/wytbjtu/keynote_to_pdf_compress?style=flat&logo=github)](https://github.com/wytbjtu/keynote_to_pdf_compress/watchers)
+[![Issues](https://img.shields.io/github/issues/wytbjtu/keynote_to_pdf_compress?style=flat&logo=github)](https://github.com/wytbjtu/keynote_to_pdf_compress/issues)
+[![Last commit](https://img.shields.io/github/last-commit/wytbjtu/keynote_to_pdf_compress?style=flat&logo=github)](https://github.com/wytbjtu/keynote_to_pdf_compress/commits)
+[![Commit activity](https://img.shields.io/github/commit-activity/m/wytbjtu/keynote_to_pdf_compress?style=flat&logo=github)](https://github.com/wytbjtu/keynote_to_pdf_compress/pulse)
+[![Contributors](https://img.shields.io/github/contributors/wytbjtu/keynote_to_pdf_compress?style=flat&logo=github)](https://github.com/wytbjtu/keynote_to_pdf_compress/graphs/contributors)
+[![Repo size](https://img.shields.io/github/repo-size/wytbjtu/keynote_to_pdf_compress?style=flat&logo=github)](https://github.com/wytbjtu/keynote_to_pdf_compress)
+[![Code size](https://img.shields.io/github/languages/code-size/wytbjtu/keynote_to_pdf_compress?style=flat&logo=github)](https://github.com/wytbjtu/keynote_to_pdf_compress)
+[![License](https://img.shields.io/github/license/wytbjtu/keynote_to_pdf_compress?style=flat)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.9%2B-blue?style=flat&logo=python&logoColor=white)](https://www.python.org/)
+[![Platform](https://img.shields.io/badge/platform-macOS-lightgrey?style=flat&logo=apple)](https://www.apple.com/macos/)
+
 Export an Apple Keynote (`.key`) presentation to PDF and produce a
 compressed copy in one step.
 
