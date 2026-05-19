@@ -23,7 +23,7 @@ pass is done with Ghostscript.
 ## Requirements
 
 - macOS with [Keynote](https://apps.apple.com/app/keynote/id409183694) installed
-- Python 3.9+
+- Python 3.9+ (skip if you use the prebuilt binary below)
 - [Ghostscript](https://www.ghostscript.com/) on `PATH` (`gs`)
 
 Install Ghostscript with Homebrew:
@@ -31,6 +31,25 @@ Install Ghostscript with Homebrew:
 ```sh
 brew install ghostscript
 ```
+
+## Download a prebuilt binary (macOS)
+
+Grab the latest `.zip` for your architecture from the
+[Releases page](https://github.com/wytbjtu/keynote_to_pdf_compress/releases):
+
+- Apple Silicon (M1/M2/M3): `keynote_to_pdf_compress-macos-arm64.zip`
+- Intel: `keynote_to_pdf_compress-macos-x86_64.zip`
+
+The binary isn't notarized, so the first run is blocked by Gatekeeper.
+Either right-click → **Open** → **Open**, or remove the quarantine
+attribute once:
+
+```sh
+xattr -d com.apple.quarantine ./keynote_to_pdf_compress
+```
+
+> Windows is not supported — Keynote and AppleScript are macOS-only, so a
+> Windows build of this tool cannot drive the export.
 
 ## Usage
 

@@ -1,0 +1,95 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to publish (e.g. v0.1.0). Created if it does not exist.'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build (${{ matrix.arch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-13
+            arch: x86_64
+          - os: macos-14
+            arch: arm64
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+
+      - name: Build single-file binary
+        run: |
+          pyinstaller --onefile --console \
+            --name keynote_to_pdf_compress \
+            keynote_to_pdf_compress.py
+
+      - name: Verify the binary runs
+        run: ./dist/keynote_to_pdf_compress --help
+
+      - name: Stage release files
+        run: |
+          mkdir -p stage/keynote_to_pdf_compress
+          cp dist/keynote_to_pdf_compress stage/keynote_to_pdf_compress/
+          cp README.md LICENSE stage/keynote_to_pdf_compress/
+          (cd stage && zip -r ../keynote_to_pdf_compress-macos-${{ matrix.arch }}.zip keynote_to_pdf_compress)
+
+      - name: Resolve release tag
+        id: tag
+        run: |
+          if [ -n "${{ github.event.inputs.tag }}" ]; then
+            echo "name=${{ github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.name }}
+          name: ${{ steps.tag.outputs.name }}
+          files: keynote_to_pdf_compress-macos-${{ matrix.arch }}.zip
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          body: |
+            ## macOS downloads
+
+            | Architecture | Download |
+            | --- | --- |
+            | Apple Silicon (M1/M2/M3) | `keynote_to_pdf_compress-macos-arm64.zip` |
+            | Intel | `keynote_to_pdf_compress-macos-x86_64.zip` |
+
+            ### Install
+
+            1. Download the zip for your Mac's architecture and unzip it.
+            2. Install Ghostscript: `brew install ghostscript`.
+            3. The binary is not notarized, so the first run will be blocked by Gatekeeper. Either:
+               - Right-click the binary → **Open** → **Open**, or
+               - Run once from Terminal: `xattr -d com.apple.quarantine ./keynote_to_pdf_compress`.
+
+            ### Run
+
+            ```sh
+            ./keynote_to_pdf_compress path/to/deck.key
+            ```
+
+            See `--help` for all options. Keynote and macOS are required.
